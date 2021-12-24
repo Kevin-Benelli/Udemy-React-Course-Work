@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 
-import "./ExpensesFilter.css";
+import "./ExpenseFilter.css";
 
-const ExpensesFilter = () => {
-  // each dropdown listens and forwards data to expense component
+const ExpensesFilter = (props) => {
+  const onChangeHandler = (e) => {
+    const filterSelectionData = {
+      year: e.target.value,
+    };
+    props.saveExpenseFilter(filterSelectionData);
+  };
 
   return (
     <div className="expenses-filter">
       <div className="expenses-filter__control">
         <label>Filter by year</label>
-        <select>
+        <select onChange={onChangeHandler}>
           <option value="2022">2022</option>
           <option value="2021">2021</option>
           <option value="2020">2020</option>
