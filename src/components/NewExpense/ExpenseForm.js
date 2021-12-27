@@ -67,19 +67,11 @@ const ExpenseForm = (props) => {
     setEnteredTitle("");
     setEnteredAmount("");
     setEnteredDate("");
-    setIsAddExpenseShown(!isAddExpenseShown);
+    props.onStopEditingHandler();
   };
 
-  const addNewExpenseHandler = () => {
-    setIsAddExpenseShown(!isAddExpenseShown);
-    console.log(isAddExpenseShown);
-  };
-
-  let addNewExpense = (
-    <button onClick={addNewExpenseHandler}> Add New Expense </button>
-  );
-  if (isAddExpenseShown === true) {
-    addNewExpense = (
+  return (
+    <form onSubmit={submitHandler}>
       <div className="new-expense__controls">
         <div className="new-expense__controls">
           <label>Title</label>
@@ -113,12 +105,13 @@ const ExpenseForm = (props) => {
         </div>
 
         <div className="new-expense__actions">
+          <button type="button" onClick={props.onStopEditingHandler}>
+            Cancel
+          </button>
           <button type="submit">Add Expense</button>
         </div>
       </div>
-    );
-  }
-
-  return <form onSubmit={submitHandler}> {addNewExpense}</form>;
+    </form>
+  );
 };
 export default ExpenseForm;
