@@ -29,6 +29,7 @@ const Expenses = (props) => {
 
         <ExpensesChart expenses={filteredExpenses} />
         <ExpensesList expenses={filteredExpenses} />
+
         {/* {
           // returns 2nd part if 1st condition is met
           filteredExpenses.length === 0 && <p>No Expenses Found!</p>
