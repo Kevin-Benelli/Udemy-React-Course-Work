@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styles from "./AddUser.module.css";
 import Button from "../Button/Button";
 import ErrorModal from "../ErrorModal/ErrorModal";
@@ -6,22 +6,17 @@ import Card from "../UI/Card";
 import Wrapper from "../Helper/Wrapper";
 
 const AddUser = (props) => {
-  const [userName, setUserName] = useState("");
-  const [age, setAge] = useState("");
+  const nameInputRef = useRef();
+  const ageInputRef = useRef();
   const [error, setError] = useState();
-
-  const userNameChangeHandler = (e) => {
-    setUserName(e.target.value);
-  };
-
-  const ageChangeHandler = (e) => {
-    setAge(e.target.value);
-  };
 
   const submitHandler = (e) => {
     e.preventDefault();
+    const enteredName = nameInputRef.current.value;
+    const enteredAge = ageInputRef.current.value;
+
     // If username entry is null, throw error modal
-    if (userName.trim().length === 0 && (age < 0 || age === "") === true) {
+    if (enteredName.trim().length === 0 && +enteredAge < 0 === true) {
       // setUserNameErrorExists(true);
       // setAgeErrorExists(true);
       // setIsModalShown(true);
@@ -31,13 +26,13 @@ const AddUser = (props) => {
       });
 
       return;
-    } else if (userName.trim().length <= 0) {
+    } else if (enteredName.trim().length <= 0) {
       setError({
         title: "Invalid input",
         message: "Please enter a valid username (non-empty).",
       });
       return;
-    } else if (+age <= 0) {
+    } else if (+enteredAge <= 0) {
       // +makes sure that string is evaluated as int
       setError({
         title: "Invalid input",
@@ -47,15 +42,15 @@ const AddUser = (props) => {
     }
 
     const addUserData = {
-      userName: userName,
-      age: age,
+      userName: enteredName,
+      age: enteredAge,
     };
 
     console.log(addUserData);
     // setAgeErrorExists(false);
     // setUserNameErrorExists(false);
-    setUserName("");
-    setAge("");
+    nameInputRef.current.value = "";
+    ageInputRef.current.value = "";
 
     props.onSaveUserData(addUserData);
   };
@@ -83,8 +78,7 @@ const AddUser = (props) => {
               type="text"
               className={styles.input}
               placeholder="Enter Username Here..."
-              onChange={userNameChangeHandler}
-              value={userName}
+              ref={nameInputRef}
             />
           </div>
           <div>
@@ -95,8 +89,7 @@ const AddUser = (props) => {
               type="number"
               className={styles.input}
               placeholder="Enter Age Here..."
-              onChange={ageChangeHandler}
-              value={age}
+              ref={ageInputRef}
             />
           </div>
           <Button type={"button"} onClick={submitHandler}>
