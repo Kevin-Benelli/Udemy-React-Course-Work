@@ -3,12 +3,12 @@ import styles from "./User.module.css";
 
 const User = ({ user }) => {
   return (
-    <div>
+    <React.Fragment>
       {console.log("in userList", user.userName, user.age)}
       <h1 className={styles.user}>
         {user.userName} ({user.age} years old)
       </h1>
-    </div>
+    </React.Fragment>
   );
 };
 
