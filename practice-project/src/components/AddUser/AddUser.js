@@ -2,42 +2,46 @@ import React, { useState } from "react";
 import styles from "./AddUser.module.css";
 import Button from "../Button/Button";
 import ErrorModal from "../ErrorModal/ErrorModal";
+import Card from "../UI/Card";
 
 const AddUser = (props) => {
   const [userName, setUserName] = useState("");
   const [age, setAge] = useState("");
-  const [ageErrorExists, setAgeErrorExists] = useState(false);
-  const [userNameErrorExists, setUserNameErrorExists] = useState(false);
-  const [isModalShown, setIsModalShown] = useState(false);
+  const [error, setError] = useState();
 
   const userNameChangeHandler = (e) => {
-    console.log("userName Updated", e.target.value);
     setUserName(e.target.value);
   };
 
   const ageChangeHandler = (e) => {
-    console.log("age Updated", e.target.value);
     setAge(e.target.value);
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
     // If username entry is null, throw error modal
-    if (
-      userName.trim().length <= 0 === true &&
-      (age < 0 || age === "") === true
-    ) {
-      setUserNameErrorExists(true);
-      setAgeErrorExists(true);
-      setIsModalShown(true);
+    if (userName.trim().length === 0 && (age < 0 || age === "") === true) {
+      // setUserNameErrorExists(true);
+      // setAgeErrorExists(true);
+      // setIsModalShown(true);
+      setError({
+        title: "Invalid input",
+        message: "Please enter a valid name and age (non-empty values).",
+      });
+
       return;
     } else if (userName.trim().length <= 0) {
-      setUserNameErrorExists(true);
-      setIsModalShown(true);
+      setError({
+        title: "Invalid input",
+        message: "Please enter a valid username (non-empty).",
+      });
       return;
-    } else if (age < 0 || age === "") {
-      setAgeErrorExists(true);
-      setIsModalShown(true);
+    } else if (+age <= 0) {
+      // +makes sure that string is evaluated as int
+      setError({
+        title: "Invalid input",
+        message: "Please enter a valid age (> 0).",
+      });
       return;
     }
 
@@ -47,8 +51,8 @@ const AddUser = (props) => {
     };
 
     console.log(addUserData);
-    setAgeErrorExists(false);
-    setUserNameErrorExists(false);
+    // setAgeErrorExists(false);
+    // setUserNameErrorExists(false);
     setUserName("");
     setAge("");
 
@@ -56,12 +60,21 @@ const AddUser = (props) => {
   };
 
   const closeModalHandler = () => {
-    setIsModalShown(false);
+    // setIsModalShown(false);
+    setError(null);
   };
 
   return (
     <div>
-      {!isModalShown ? (
+      {error && (
+        <ErrorModal
+          title={error.title}
+          message={error.message}
+          onCloseModalHandler={closeModalHandler}
+        />
+      )}
+
+      <Card className={styles.input}>
         <form>
           <div>
             <label htmlFor="username"> Username: </label>
@@ -85,19 +98,11 @@ const AddUser = (props) => {
               value={age}
             />
           </div>
-          <Button onClickHandler={submitHandler} />
+          <Button type={"button"} onClick={submitHandler}>
+            Add User
+          </Button>
         </form>
-      ) : (
-        <div>
-          {console.log(userNameErrorExists, ageErrorExists)}
-
-          <ErrorModal
-            nameError={userNameErrorExists}
-            ageError={ageErrorExists}
-            onCloseModalHandler={closeModalHandler}
-          />
-        </div>
-      )}
+      </Card>
     </div>
   );
 };
